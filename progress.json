@@ -14,27 +14,27 @@
     },
     {
       "name": "phase-2-contracts",
-      "percentage": 75,
+      "percentage": 100,
       "tasks": [
         {"name": "Create AccessControlCore.sol", "status": "completed"},
         {"name": "Add PolicyManager.sol", "status": "completed"},
         {"name": "Integrate FROSTVerifier", "status": "completed"},
-        {"name": "Unit tests, gas measurements, and upgradeability tests", "status": "pending"}
+        {"name": "Unit tests, gas measurements, and upgradeability tests", "status": "completed"}
       ]
     },
     {
       "name": "phase-3-api",
-      "percentage": 0,
+      "percentage": 100,
       "tasks": [
-        {"name": "Add TypeScript SDK", "status": "pending"},
-        {"name": "Add deployment and benchmark scripts", "status": "pending"}
+        {"name": "Add TypeScript SDK", "status": "completed"},
+        {"name": "Add deployment and benchmark scripts", "status": "completed"}
       ]
     },
     {
       "name": "phase-4-hardening",
       "percentage": 0,
       "tasks": [
-        {"name": "Run static analysis", "status": "pending"},
+        {"name": "Run static analysis", "status": "in_progress"},
         {"name": "Add fuzz tests", "status": "pending"},
         {"name": "Optimize hot paths", "status": "pending"}
       ]
@@ -49,5 +49,5 @@
       ]
     }
   ],
-  "overall_progress": 24
+  "overall_progress": 30
 }

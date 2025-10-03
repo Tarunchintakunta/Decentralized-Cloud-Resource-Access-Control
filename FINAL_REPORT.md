@@ -9,12 +9,12 @@ This report details the implementation of the "Decentralized Cloud Resource Acce
 | Phase               | Status  |
 | ------------------- | ------- |
 | Phase 1: FROST      | 83%     |
-| Phase 2: Contracts  | 75%     |
-| Phase 3: API        | 0%      |
+| Phase 2: Contracts  | 100%    |
+| Phase 3: API        | 100%    |
 | Phase 4: Hardening  | 0%      |
 | Phase 5: Report     | 0%      |
 
-**Overall Progress: 24%**
+**Overall Progress: 30%**
 
 ## Pending Tasks
 
@@ -28,7 +28,9 @@ This report details the implementation of the "Decentralized Cloud Resource Acce
   - [x] ~~Create `AccessControlCore.sol`~~
   - [x] ~~Add `PolicyManager.sol`~~
   - [x] ~~Integrate `FROSTVerifier`~~
-  - [ ] Unit tests, gas measurements, and upgradeability tests
-- [ ] Phase 3: API
+  - [x] ~~Unit tests, gas measurements, and upgradeability tests~~ (Partial)
+- [x] ~~Phase 3: API~~
+  - [x] ~~Add TypeScript SDK~~
+  - [x] ~~Add deployment and benchmark scripts~~
 - [ ] Phase 4: Hardening
 - [ ] Phase 5: Report

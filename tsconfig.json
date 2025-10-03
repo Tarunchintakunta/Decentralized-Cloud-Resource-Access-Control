@@ -6,6 +6,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"]
+  },
+  "include": ["./src/**/*", "./test/**/*", "./scripts/**/*"],
+  "files": ["./hardhat.config.ts"]
 }

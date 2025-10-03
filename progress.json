@@ -1,0 +1,53 @@
+{
+  "phases": [
+    {
+      "name": "phase-1-frost",
+      "percentage": 17,
+      "tasks": [
+        {"name": "Scaffold repo", "status": "completed"},
+        {"name": "Implement FROST DKG & signing", "status": "pending"},
+        {"name": "Add unit tests for FROST", "status": "pending"},
+        {"name": "Implement FROSTVerifier.sol", "status": "pending"},
+        {"name": "Add tests for FROSTVerifier.sol", "status": "pending"},
+        {"name": "Run static analysis and collect outputs", "status": "pending"}
+      ]
+    },
+    {
+      "name": "phase-2-contracts",
+      "percentage": 0,
+      "tasks": [
+        {"name": "Create AccessControlCore.sol", "status": "pending"},
+        {"name": "Add PolicyManager.sol", "status": "pending"},
+        {"name": "Integrate FROSTVerifier", "status": "pending"},
+        {"name": "Unit tests, gas measurements, and upgradeability tests", "status": "pending"}
+      ]
+    },
+    {
+      "name": "phase-3-api",
+      "percentage": 0,
+      "tasks": [
+        {"name": "Add TypeScript SDK", "status": "pending"},
+        {"name": "Add deployment and benchmark scripts", "status": "pending"}
+      ]
+    },
+    {
+      "name": "phase-4-hardening",
+      "percentage": 0,
+      "tasks": [
+        {"name": "Run static analysis", "status": "pending"},
+        {"name": "Add fuzz tests", "status": "pending"},
+        {"name": "Optimize hot paths", "status": "pending"}
+      ]
+    },
+    {
+      "name": "phase-5-report",
+      "percentage": 0,
+      "tasks": [
+        {"name": "Create FINAL_REPORT.md and docs/architecture.md", "status": "pending"},
+        {"name": "Produce progress.json", "status": "pending"},
+        {"name": "Create PRs for each branch", "status": "pending"}
+      ]
+    }
+  ],
+  "overall_progress": 3
+}

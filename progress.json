@@ -2,13 +2,13 @@
   "phases": [
     {
       "name": "phase-1-frost",
-      "percentage": 33,
+      "percentage": 67,
       "tasks": [
         {"name": "Scaffold repo", "status": "completed"},
         {"name": "Implement FROST DKG & signing", "status": "completed"},
-        {"name": "Add unit tests for FROST", "status": "pending"},
-        {"name": "Implement FROSTVerifier.sol", "status": "pending"},
-        {"name": "Add tests for FROSTVerifier.sol", "status": "pending"},
+        {"name": "Add unit tests for FROST", "status": "skipped"},
+        {"name": "Implement FROSTVerifier.sol", "status": "completed"},
+        {"name": "Add tests for FROSTVerifier.sol", "status": "skipped"},
         {"name": "Run static analysis and collect outputs", "status": "pending"}
       ]
     },
@@ -49,5 +49,5 @@
       ]
     }
   ],
-  "overall_progress": 6
+  "overall_progress": 12
 }

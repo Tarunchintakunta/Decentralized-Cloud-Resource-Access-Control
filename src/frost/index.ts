@@ -1,26 +1,27 @@
-import { secp256k1 } from '@noble/curves/secp256k1';
-import { mod } from '@noble/curves/abstract/modular';
+import { mod } from '@noble/curves/abstract/modular.js';
 import { sha256 } from '@noble/hashes/sha256';
+import { secp2_256k1 } from '@noble/curves/secp256k1.js';
+
 
 const Ciphersuite = {
     ID: 'FROST_secp256k1_SHA256',
     CONTEXT: 'FROST_secp256k1_SHA256_CONTEXT',
-    q: secp256k1.CURVE.n,
-    G: secp256k1.ProjectivePoint.BASE,
+    q: secp2_256k1.CURVE.n,
+    G: secp2_256k1.ProjectivePoint.BASE,
 };
 
 type Participant = {
     id: bigint;
     coefficients: bigint[];
     proofOfKnowledge: [bigint, bigint];
-    publicKey: secp256k1.ProjectivePoint;
+    publicKey: any; // Using any for now
     secretShare?: bigint;
     nonce?: [bigint, bigint];
     signatureShare?: bigint;
 };
 
 type Round1Output = {
-    commitments: [secp256k1.ProjectivePoint, secp256k1.ProjectivePoint][];
+    commitments: [any, any][];
 };
 
 type Round2Output = {
@@ -28,12 +29,20 @@ type Round2Output = {
 };
 
 type AggregatedSignature = {
-    R: secp256k1.ProjectivePoint;
+    R: any;
     z: bigint;
 };
 
+function randomBytes(bytesLength = 32) {
+    const random = new Uint8Array(bytesLength);
+    if (typeof process === 'object' && typeof require === 'function') {
+        return require('crypto').randomBytes(bytesLength);
+    }
+    return crypto.getRandomValues(random);
+}
+
 // Helper function to generate a random number within the finite field
-const getRandomNumber = () => mod(BigInt(`0x${Buffer.from(secp256k1.utils.randomPrivateKey()).toString('hex')}`), Ciphersuite.q);
+const getRandomNumber = () => mod(BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`), Ciphersuite.q);
 
 /**
  * Creates a new participant for the FROST protocol.
@@ -43,7 +52,7 @@ const getRandomNumber = () => mod(BigInt(`0x${Buffer.from(secp256k1.utils.random
  */
 export function createParticipant(id: bigint, t: number): Participant {
     const coefficients = Array.from({ length: t }, (_, i) => {
-        const key = i === 0 ? secp256k1.utils.randomPrivateKey() : secp256k1.utils.randomPrivateKey();
+        const key = i === 0 ? randomBytes() : randomBytes();
         return BigInt(`0x${Buffer.from(key).toString('hex')}`);
     });
 
@@ -65,7 +74,7 @@ export function createParticipant(id: bigint, t: number): Participant {
  * @returns A tuple containing the nonce and the signature.
  */
 function schnorrProve(secret: bigint): [bigint, bigint] {
-    const r = BigInt(`0x${Buffer.from(secp256k1.utils.randomPrivateKey()).toString('hex')}`);
+    const r = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
     const R = Ciphersuite.G.multiply(r);
     const P = Ciphersuite.G.multiply(secret);
     const c = challenge(P, R);
@@ -80,8 +89,8 @@ function schnorrProve(secret: bigint): [bigint, bigint] {
  * @returns The challenge hash.
  */
 function challenge(
-    P: secp256k1.ProjectivePoint,
-    R: secp256k1.ProjectivePoint,
+    P: any,
+    R: any,
     message?: Uint8Array
 ): bigint {
     const PBytes = P.toRawBytes();
@@ -115,7 +124,7 @@ export function calculateSecretShare(coefficients: bigint[], id: bigint): bigint
  * @param id The identifier of the participant receiving the share.
  * @returns True if the share is valid, false otherwise.
  */
-export function verifySecretShare(share: bigint, publicKey: secp256k1.ProjectivePoint, id: bigint): boolean {
+export function verifySecretShare(share: bigint, publicKey: any, id: bigint): boolean {
     const Gs = Ciphersuite.G.multiply(share);
     // This is a simplified check. A full DKG would require commitment verification.
     return Gs.equals(publicKey.multiply(id));
@@ -126,8 +135,8 @@ export function verifySecretShare(share: bigint, publicKey: secp256k1.Projective
  * @param publicKeys An array of public keys.
  * @returns The aggregated public key.
  */
-export function aggregatePublicKeys(publicKeys: secp256k1.ProjectivePoint[]): secp256k1.ProjectivePoint {
-    return publicKeys.reduce((acc, pk) => acc.add(pk), secp256k1.ProjectivePoint.ZERO);
+export function aggregatePublicKeys(publicKeys: any[]): any {
+    return publicKeys.reduce((acc, pk) => acc.add(pk), secp2_256k1.ProjectivePoint.ZERO);
 }
 
 /**
@@ -135,9 +144,9 @@ export function aggregatePublicKeys(publicKeys: secp256k1.ProjectivePoint[]): se
  * @param participant The participant executing the round.
  * @returns The commitments to be broadcasted.
  */
-export function signRound1(participant: Participant): [secp256k1.ProjectivePoint, secp256k1.ProjectivePoint] {
-    const d = BigInt(`0x${Buffer.from(secp256k1.utils.randomPrivateKey()).toString('hex')}`);
-    const e = BigInt(`0x${Buffer.from(secp256k1.utils.randomPrivateKey()).toString('hex')}`);
+export function signRound1(participant: Participant): [any, any] {
+    const d = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
+    const e = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
     participant.nonce = [d, e];
     const D = Ciphersuite.G.multiply(d);
     const E = Ciphersuite.G.multiply(e);
@@ -155,14 +164,14 @@ export function signRound1(participant: Participant): [secp256k1.ProjectivePoint
 export function signRound2(
     participant: Participant,
     message: Uint8Array,
-    commitments: [secp256k1.ProjectivePoint, secp256k1.ProjectivePoint][],
-    groupPublicKey: secp256k1.ProjectivePoint
+    commitments: [any, any][],
+    groupPublicKey: any
 ): bigint {
     if (!participant.nonce || !participant.secretShare) {
         throw new Error('Participant has not completed round 1 or DKG');
     }
 
-    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp256k1.ProjectivePoint.ZERO);
+    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp2_256k1.ProjectivePoint.ZERO);
     const c = challenge(groupPublicKey, R, message);
 
     const lambda_i = lagrange(participant.id, commitments.map((_, i) => BigInt(i + 1)));
@@ -178,12 +187,12 @@ export function signRound2(
  */
 export function aggregateSignatures(
     signatureShares: bigint[],
-    commitments: [secp256k1.ProjectivePoint, secp256k1.ProjectivePoint][],
-    groupPublicKey: secp256k1.ProjectivePoint,
+    commitments: [any, any][],
+    groupPublicKey: any,
     message: Uint8Array
 ): AggregatedSignature {
     const z = signatureShares.reduce((acc, s) => mod(acc + s, Ciphersuite.q), 0n);
-    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp256k1.ProjectivePoint.ZERO);
+    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp2_256k1.ProjectivePoint.ZERO);
     const c = challenge(groupPublicKey, R, message);
 
     // Verify the aggregated signature

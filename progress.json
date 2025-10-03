@@ -32,9 +32,9 @@
     },
     {
       "name": "phase-4-hardening",
-      "percentage": 0,
+      "percentage": 33,
       "tasks": [
-        {"name": "Run static analysis", "status": "in_progress"},
+        {"name": "Run static analysis", "status": "completed"},
         {"name": "Add fuzz tests", "status": "pending"},
         {"name": "Optimize hot paths", "status": "pending"}
       ]
@@ -43,11 +43,11 @@
       "name": "phase-5-report",
       "percentage": 0,
       "tasks": [
-        {"name": "Create FINAL_REPORT.md and docs/architecture.md", "status": "pending"},
+        {"name": "Create FINAL_REPORT.md and docs/architecture.md", "status": "completed"},
         {"name": "Produce progress.json", "status": "pending"},
         {"name": "Create PRs for each branch", "status": "pending"}
       ]
     }
   ],
-  "overall_progress": 30
+  "overall_progress": 32
 }

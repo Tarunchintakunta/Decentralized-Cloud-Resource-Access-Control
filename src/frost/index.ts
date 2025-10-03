@@ -1,36 +1,25 @@
-import { mod } from '@noble/curves/abstract/modular.js';
-import { sha256 } from '@noble/hashes/sha256';
-import { secp2_256k1 } from '@noble/curves/secp256k1.js';
+import { ec } from "elliptic";
+import BN from "bn.js";
+import keccak256 from "keccak256";
 
-
+const ecInstance = new ec("secp256k1");
 const Ciphersuite = {
     ID: 'FROST_secp256k1_SHA256',
     CONTEXT: 'FROST_secp256k1_SHA256_CONTEXT',
-    q: secp2_256k1.CURVE.n,
-    G: secp2_256k1.ProjectivePoint.BASE,
+    q: ecInstance.curve.n,
+    G: ecInstance.g,
 };
+
+type Point = ec.KeyPair;
 
 type Participant = {
-    id: bigint;
-    coefficients: bigint[];
-    proofOfKnowledge: [bigint, bigint];
-    publicKey: any; // Using any for now
-    secretShare?: bigint;
-    nonce?: [bigint, bigint];
-    signatureShare?: bigint;
-};
-
-type Round1Output = {
-    commitments: [any, any][];
-};
-
-type Round2Output = {
-    signatureShares: bigint[];
-};
-
-type AggregatedSignature = {
-    R: any;
-    z: bigint;
+    id: BN;
+    coefficients: BN[];
+    proofOfKnowledge: [Point, BN];
+    publicKey: Point;
+    secretShare?: BN;
+    nonce?: [BN, BN];
+    signatureShare?: BN;
 };
 
 function randomBytes(bytesLength = 32) {
@@ -41,25 +30,13 @@ function randomBytes(bytesLength = 32) {
     return crypto.getRandomValues(random);
 }
 
-// Helper function to generate a random number within the finite field
-const getRandomNumber = () => mod(BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`), Ciphersuite.q);
+const getRandomNumber = () => new BN(randomBytes()).mod(new BN(Ciphersuite.q));
 
-/**
- * Creates a new participant for the FROST protocol.
- * @param id The participant's identifier.
- * @param t The threshold of signers required.
- * @returns A new participant.
- */
-export function createParticipant(id: bigint, t: number): Participant {
-    const coefficients = Array.from({ length: t }, (_, i) => {
-        const key = i === 0 ? randomBytes() : randomBytes();
-        return BigInt(`0x${Buffer.from(key).toString('hex')}`);
-    });
-
+export function createParticipant(id: BN, t: number): Participant {
+    const coefficients = Array.from({ length: t }, () => getRandomNumber());
     const secret = coefficients[0];
     const proofOfKnowledge = schnorrProve(secret);
-    const publicKey = Ciphersuite.G.multiply(secret);
-
+    const publicKey = ecInstance.keyFromPrivate(secret);
     return {
         id,
         coefficients,
@@ -68,184 +45,121 @@ export function createParticipant(id: bigint, t: number): Participant {
     };
 }
 
-/**
- * Generates a Schnorr proof of knowledge of a secret key.
- * @param secret The secret key.
- * @returns A tuple containing the nonce and the signature.
- */
-function schnorrProve(secret: bigint): [bigint, bigint] {
-    const r = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
-    const R = Ciphersuite.G.multiply(r);
-    const P = Ciphersuite.G.multiply(secret);
+function schnorrProve(secret: BN): [Point, BN] {
+    const r = getRandomNumber();
+    const R = ecInstance.keyFromPrivate(r);
+    const P = ecInstance.keyFromPrivate(secret);
     const c = challenge(P, R);
-    const s = mod(r + c * secret, Ciphersuite.q);
-    return [BigInt(`0x${Buffer.from(R.toRawBytes()).toString('hex')}`), s];
+    const s = r.add(secret.mul(c)).umod(new BN(Ciphersuite.q));
+    return [R, s];
 }
 
-/**
- * Computes the challenge hash for a Schnorr proof.
- * @param P The public key.
- * @param R The nonce point.
- * @returns The challenge hash.
- */
-function challenge(
-    P: any,
-    R: any,
-    message?: Uint8Array
-): bigint {
-    const PBytes = P.toRawBytes();
-    const RBytes = R.toRawBytes();
-    const MBytes = message || new Uint8Array();
-    const msg = new Uint8Array(PBytes.length + RBytes.length + MBytes.length);
-    msg.set(PBytes);
-    msg.set(RBytes, PBytes.length);
-    msg.set(MBytes, PBytes.length + RBytes.length);
-    return BigInt(`0x${Buffer.from(sha256(msg)).toString('hex')}`);
+function challenge(P: Point, R: Point, message?: Uint8Array): BN {
+    const R_x = R.getPublic().getX().toBuffer('be', 32);
+    const R_y = R.getPublic().getY().toBuffer('be', 32);
+    const P_x = P.getPublic().getX().toBuffer('be', 32);
+    const P_y = P.getPublic().getY().toBuffer('be', 32);
+
+    let hash_input = [R_x, R_y, P_x, P_y];
+
+    if (message) {
+        hash_input.push(Buffer.from(message));
+    }
+
+    const msg = keccak256(Buffer.concat(hash_input));
+
+    return new BN(msg).umod(new BN(Ciphersuite.q));
 }
 
-/**
- * Calculates the secret share for a given participant.
- * @param coefficients The coefficients of the polynomial.
- * @param id The identifier of the participant to calculate the share for.
- * @returns The secret share.
- */
-export function calculateSecretShare(coefficients: bigint[], id: bigint): bigint {
-    let share = 0n;
+export function calculateSecretShare(coefficients: BN[], id: BN): BN {
+    let share = new BN(0);
     for (let i = 0; i < coefficients.length; i++) {
-        share = mod(share + coefficients[i] * (id ** BigInt(i)), Ciphersuite.q);
+        share = share.add(coefficients[i].mul(id.pow(new BN(i)))).umod(new BN(Ciphersuite.q));
     }
     return share;
 }
 
-/**
- * Verifies a secret share against a participant's public key.
- * @param share The secret share to verify.
- * @param publicKey The public key of the participant who sent the share.
- * @param id The identifier of the participant receiving the share.
- * @returns True if the share is valid, false otherwise.
- */
-export function verifySecretShare(share: bigint, publicKey: any, id: bigint): boolean {
-    const Gs = Ciphersuite.G.multiply(share);
-    // This is a simplified check. A full DKG would require commitment verification.
-    return Gs.equals(publicKey.multiply(id));
+export function aggregatePublicKeys(publicKeys: Point[]): Point {
+    return publicKeys.reduce((acc: ec.KeyPair | null, pk) => {
+        const point = pk.getPublic();
+        return acc ? ecInstance.keyFromPublic(acc.getPublic().add(point)) : ecInstance.keyFromPublic(point);
+    }, null) as Point;
 }
 
-/**
- * Aggregates the public keys of a set of participants.
- * @param publicKeys An array of public keys.
- * @returns The aggregated public key.
- */
-export function aggregatePublicKeys(publicKeys: any[]): any {
-    return publicKeys.reduce((acc, pk) => acc.add(pk), secp2_256k1.ProjectivePoint.ZERO);
+function getBinding(participantId: BN, message: Uint8Array, commitments: [Point, Point][]): BN {
+    const id_bytes = participantId.toBuffer('be', 32);
+    const msg_bytes = Buffer.from(message);
+    const commitments_bytes = Buffer.concat(
+        commitments.map(([D, E]) =>
+            Buffer.concat([
+                D.getPublic().getX().toBuffer('be', 32),
+                D.getPublic().getY().toBuffer('be', 32),
+                E.getPublic().getX().toBuffer('be', 32),
+                E.getPublic().getY().toBuffer('be', 32),
+            ])
+        )
+    );
+    const hash = keccak256(Buffer.concat([id_bytes, msg_bytes, commitments_bytes]));
+    return new BN(hash).umod(new BN(Ciphersuite.q));
 }
 
-/**
- * Executes the first round of the FROST signing protocol.
- * @param participant The participant executing the round.
- * @returns The commitments to be broadcasted.
- */
-export function signRound1(participant: Participant): [any, any] {
-    const d = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
-    const e = BigInt(`0x${Buffer.from(randomBytes()).toString('hex')}`);
+export function signRound1(participant: Participant): [Point, Point] {
+    const d = getRandomNumber();
+    const e = getRandomNumber();
     participant.nonce = [d, e];
-    const D = Ciphersuite.G.multiply(d);
-    const E = Ciphersuite.G.multiply(e);
+    const D = ecInstance.keyFromPrivate(d);
+    const E = ecInstance.keyFromPrivate(e);
     return [D, E];
 }
 
-/**
- * Executes the second round of the FROST signing protocol.
- * @param participant The participant executing the round.
- * @param message The message to sign.
- * @param commitments An array of commitments from all participants.
- * @param groupPublicKey The aggregated public key of the group.
- * @returns The participant's signature share.
- */
-export function signRound2(
-    participant: Participant,
-    message: Uint8Array,
-    commitments: [any, any][],
-    groupPublicKey: any
-): bigint {
+export function signRound2(participant: Participant, message: Uint8Array, commitments: [Point, Point][], groupPublicKey: Point): BN {
     if (!participant.nonce || !participant.secretShare) {
         throw new Error('Participant has not completed round 1 or DKG');
     }
-
-    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp2_256k1.ProjectivePoint.ZERO);
+    const R = commitments.reduce((acc: ec.KeyPair | null, [c]) => {
+        const point = c.getPublic();
+        return acc ? ecInstance.keyFromPublic(acc.getPublic().add(point)) : ecInstance.keyFromPublic(point);
+    }, null);
+    if (!R) throw new Error('No commitments provided');
+    const rho_i = getBinding(participant.id, message, commitments);
     const c = challenge(groupPublicKey, R, message);
-
-    const lambda_i = lagrange(participant.id, commitments.map((_, i) => BigInt(i + 1)));
-    const z_i = mod(participant.nonce[0] + participant.nonce[1] * c, Ciphersuite.q);
-
-    return mod(z_i + lambda_i * participant.secretShare * c, Ciphersuite.q);
+    const lambda_i = lagrange(participant.id, commitments.map((_, i) => new BN(i + 1)));
+    const z_i = participant.nonce[0].add(participant.nonce[1].mul(rho_i)).add(lambda_i.mul(participant.secretShare).mul(c)).umod(new BN(Ciphersuite.q));
+    return z_i;
 }
 
-/**
- * Aggregates the signature shares from a set of participants.
- * @param signatureShares An array of signature shares.
- * @returns The aggregated signature.
- */
-export function aggregateSignatures(
-    signatureShares: bigint[],
-    commitments: [any, any][],
-    groupPublicKey: any,
-    message: Uint8Array
-): AggregatedSignature {
-    const z = signatureShares.reduce((acc, s) => mod(acc + s, Ciphersuite.q), 0n);
-    const R = commitments.reduce((acc, c) => acc.add(c[0]), secp2_256k1.ProjectivePoint.ZERO);
+export function aggregateSignatures(signatureShares: BN[], commitments: [Point, Point][], groupPublicKey: Point, message: Uint8Array): { R: Point, z: BN } {
+    const z = signatureShares.reduce((acc, s) => acc.add(s)).umod(new BN(Ciphersuite.q));
+    const R = commitments.reduce((acc: ec.KeyPair | null, [c]) => {
+        const point = c.getPublic();
+        return acc ? ecInstance.keyFromPublic(acc.getPublic().add(point)) : ecInstance.keyFromPublic(point);
+    }, null);
+    if (!R) throw new Error('No commitments provided');
     const c = challenge(groupPublicKey, R, message);
-
-    // Verify the aggregated signature
-    const Gz = Ciphersuite.G.multiply(z);
-    const RcPk = R.add(groupPublicKey.multiply(c));
-    if (!Gz.equals(RcPk)) {
+    const Gz = ecInstance.g.mul(z);
+    const RcPk = R.getPublic().add(groupPublicKey.getPublic().mul(c));
+    if (!Gz.eq(RcPk)) {
         throw new Error('Aggregated signature is invalid');
     }
-
     return { R, z };
 }
 
-/**
- * Calculates the Lagrange coefficient for a given participant.
- * @param i The identifier of the participant.
- * @param S The set of participant identifiers.
- * @returns The Lagrange coefficient.
- */
-function lagrange(i: bigint, S: bigint[]): bigint {
-    let num = 1n;
-    let den = 1n;
+function lagrange(i: BN, S: BN[]): BN {
+    let num = new BN(1);
+    let den = new BN(1);
     for (const j of S) {
-        if (i === j) continue;
-        num = mod(num * j, Ciphersuite.q);
-        den = mod(den * (j - i), Ciphersuite.q);
+        if (i.eq(j))
+            continue;
+        num = num.mul(j).umod(new BN(Ciphersuite.q));
+        const j_sub_i = j.sub(i);
+        let temp = den.mul(j_sub_i);
+        den = temp.mod(new BN(Ciphersuite.q));
+        if (den.isNeg()) {
+            den = den.add(new BN(Ciphersuite.q));
+        }
     }
-    return mod(num * modInverse(den, Ciphersuite.q), Ciphersuite.q);
-}
-
-/**
- * Computes the modular inverse of a number.
- * @param n The number.
- * @param p The modulus.
- * @returns The modular inverse.
- */
-function modInverse(n: bigint, p: bigint): bigint {
-    return modPow(n, p - 2n, p);
-}
-
-/**
- * Computes the modular exponentiation of a number.
- * @param base The base.
- * @param exp The exponent.
- * @param mod The modulus.
- * @returns The result of the modular exponentiation.
- */
-function modPow(base: bigint, exp: bigint, mod: bigint): bigint {
-    let res = 1n;
-    base = base % mod;
-    while (exp > 0n) {
-        if (exp % 2n === 1n) res = (res * base) % mod;
-        exp = exp >> 1n;
-        base = (base * base) % mod;
+    if (den.isZero()) {
+        throw new Error("Division by zero in lagrange interpolation");
     }
-    return res;
+    return num.mul(den.invm(new BN(Ciphersuite.q))).umod(new BN(Ciphersuite.q));
 }

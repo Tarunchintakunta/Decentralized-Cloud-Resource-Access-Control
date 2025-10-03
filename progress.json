@@ -2,23 +2,23 @@
   "phases": [
     {
       "name": "phase-1-frost",
-      "percentage": 67,
+      "percentage": 83,
       "tasks": [
         {"name": "Scaffold repo", "status": "completed"},
         {"name": "Implement FROST DKG & signing", "status": "completed"},
         {"name": "Add unit tests for FROST", "status": "skipped"},
         {"name": "Implement FROSTVerifier.sol", "status": "completed"},
         {"name": "Add tests for FROSTVerifier.sol", "status": "skipped"},
-        {"name": "Run static analysis and collect outputs", "status": "pending"}
+        {"name": "Run static analysis and collect outputs", "status": "completed"}
       ]
     },
     {
       "name": "phase-2-contracts",
-      "percentage": 0,
+      "percentage": 75,
       "tasks": [
-        {"name": "Create AccessControlCore.sol", "status": "pending"},
-        {"name": "Add PolicyManager.sol", "status": "pending"},
-        {"name": "Integrate FROSTVerifier", "status": "pending"},
+        {"name": "Create AccessControlCore.sol", "status": "completed"},
+        {"name": "Add PolicyManager.sol", "status": "completed"},
+        {"name": "Integrate FROSTVerifier", "status": "completed"},
         {"name": "Unit tests, gas measurements, and upgradeability tests", "status": "pending"}
       ]
     },
@@ -49,5 +49,5 @@
       ]
     }
   ],
-  "overall_progress": 12
+  "overall_progress": 24
 }

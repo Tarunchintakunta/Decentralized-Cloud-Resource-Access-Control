@@ -9,40 +9,40 @@ library EllipticCurve {
         uint256 y;
     }
 
-    function G() internal pure returns (Point memory) {
+    function g() internal pure returns (Point memory) {
         return Point(
             0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
             0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8
         );
     }
 
-    function P() internal pure returns (uint256) {
+    function p() internal pure returns (uint256) {
         return 2**256 - 2**32 - 977;
     }
 
-    function N() internal pure returns (uint256) {
+    function n() internal pure returns (uint256) {
         return 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
     }
 
-    function isOnCurve(Point memory p) internal pure returns (bool) {
-        return Curve.onCurve(Curve.secp256k1(), p.x, p.y);
+    function isOnCurve(Point memory pt) internal pure returns (bool) {
+        return Curve.onCurve(Curve.secp256k1(), pt.x, pt.y);
     }
 
-    function add(Point memory p, Point memory q) internal view returns (Point memory) {
+    function add(Point memory p, Point memory q) internal pure returns (Point memory) {
         (uint256 x, uint256 y) = Curve.add(Curve.secp256k1(), p.x, p.y, q.x, q.y);
         return Point(x, y);
     }
 
-    function mul(Point memory p, uint256 scalar) internal view returns (Point memory) {
+    function mul(Point memory p, uint256 scalar) internal pure returns (Point memory) {
         (uint256 x, uint256 y) = Curve.mul(Curve.secp256k1(), p.x, p.y, scalar);
         return Point(x, y);
     }
 
-    function decompress(uint256 x) internal view returns (Point memory) {
-        uint256 y2 = (x * x * x + 7) % P();
-        uint256 y = expMod(y2, (P() + 1) / 4, P());
-        if (y * y % P() != y2) {
-            y = P() - y;
+    function decompress(uint256 x) internal pure returns (Point memory) {
+        uint256 y2 = (x * x * x + 7) % p();
+        uint256 y = expMod(y2, (p() + 1) / 4, p());
+        if (y * y % p() != y2) {
+            y = p() - y;
         }
         return Point(x, y);
     }

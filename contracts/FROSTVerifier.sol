@@ -24,13 +24,13 @@ contract FROSTVerifier {
         EllipticCurve.Point memory groupPublicKey
     ) public view returns (bool) {
         require(EllipticCurve.isOnCurve(groupPublicKey), "Invalid public key");
-        require(signatureR > 0 && signatureR < EllipticCurve.P(), "Invalid signature R");
-        require(signatureZ > 0 && signatureZ < EllipticCurve.N(), "Invalid signature Z");
+        require(signatureR > 0 && signatureR < EllipticCurve.p(), "Invalid signature R");
+        require(signatureZ > 0 && signatureZ < EllipticCurve.n(), "Invalid signature Z");
 
         EllipticCurve.Point memory R = EllipticCurve.decompress(signatureR);
         bytes32 challenge = keccak256(abi.encodePacked(R.x, R.y, groupPublicKey.x, groupPublicKey.y, message));
 
-        EllipticCurve.Point memory Gz = EllipticCurve.mul(EllipticCurve.G(), signatureZ);
+        EllipticCurve.Point memory Gz = EllipticCurve.mul(EllipticCurve.g(), signatureZ);
         EllipticCurve.Point memory RcPk = EllipticCurve.add(R, EllipticCurve.mul(groupPublicKey, uint256(challenge)));
 
         return Gz.x == RcPk.x && Gz.y == RcPk.y;

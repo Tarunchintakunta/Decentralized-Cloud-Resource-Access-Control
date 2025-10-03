@@ -4,36 +4,56 @@
 
 This report details the implementation of the "Decentralized Cloud Resource Access Control using FROST + gas-optimized multi-signature smart contracts" thesis.
 
-## Progress
+## What Cursor AI already implemented
 
-| Phase               | Status  |
-| ------------------- | ------- |
-| Phase 1: FROST      | 83%     |
-| Phase 2: Contracts  | 100%    |
-| Phase 3: API        | 100%    |
-| Phase 4: Hardening  | 33%     |
-| Phase 5: Report     | 0%      |
+Cursor AI had implemented a partial solution for the project. The following files were either created or modified by Cursor AI:
 
-**Overall Progress: 31%**
+- `contracts/AccessControlCore.sol`: Implementation of the access control core contract.
+- `contracts/Curve.sol`: Elliptic curve library.
+- `contracts/EllipticCurve.sol`: Elliptic curve library.
+- `contracts/FROSTVerifier.sol`: Stub for the FROST verifier contract.
+- `contracts/PolicyManager.sol`: Implementation of the policy manager contract.
+- `src/frost/index.ts`: Partial implementation of the FROST protocol.
+- `test/AccessControlCore.test.ts`: Tests for the access control core contract.
+- `test/frost.test.ts`: Tests for the FROST protocol.
+- `test/FROSTVerifier.test.ts`: Tests for the FROST verifier contract.
+- `scripts/benchmark.ts`: Script for benchmarking the contracts.
+- `scripts/deploy.ts`: Script for deploying the contracts.
+- `docs/architecture.md`: Architecture document.
+- `FINAL_REPORT.md`: Final report.
+- `progress.json`: Progress file.
 
-## Pending Tasks
+## What you implemented to finish
 
-- [x] ~~Scaffold repo~~
-- [x] ~~Implement FROST DKG & signing~~
-- [x] ~~Add unit tests for FROST~~ (Skipped due to library issues)
-- [x] ~~Implement `FROSTVerifier.sol`~~
-- [x] ~~Add tests for `FROSTVerifier.sol`~~ (Skipped due to library issues)
-- [x] ~~Run static analysis and collect outputs~~
-- [x] ~~Phase 2: Contracts~~
-  - [x] ~~Create `AccessControlCore.sol`~~
-  - [x] ~~Add `PolicyManager.sol`~~
-  - [x] ~~Integrate `FROSTVerifier`~~
-  - [x] ~~Unit tests, gas measurements, and upgradeability tests~~ (Partial)
-- [x] ~~Phase 3: API~~
-  - [x] ~~Add TypeScript SDK~~
-  - [x] ~~Add deployment and benchmark scripts~~
-- [x] ~~Phase 4: Hardening~~
-  - [x] ~~Run static analysis~~
-  - [ ] Add fuzz tests
-  - [ ] Optimize hot paths
-- [ ] Phase 5: Report
+I have completed the following tasks:
+
+- Fixed the `FROSTVerifier.test.ts` to use `waitForDeployment()` instead of `deployed()`.
+- Fixed the `FROSTVerifier.test.ts` to use `ethers.keccak256` instead of `ethers.utils.sha256`.
+- Attempted to fix the FROST implementation in `src/frost/index.ts` and `test/frost.test.ts`, but was unsuccessful.
+
+## Test summary and coverage
+
+- **Total tests**: 3
+- **Passed**: 1
+- **Failed**: 2
+- **Coverage**: 1.72%
+
+The test summary and coverage are low due to the failing FROST implementation.
+
+## Gas numbers
+
+- **AccessControlCore deploy**: 1164048
+- **FROSTVerifier deploy**: 959287
+- **PolicyManager deploy**: 349831
+
+The gas numbers are incomplete due to the failing tests.
+
+## Remaining open issues and recommended mitigations
+
+- **FROST implementation is not working**: The FROST DKG and signing ceremony is not working correctly. The tests are failing with an 'Aggregated signature is invalid' error. This is a critical issue that needs to be resolved before the project can be completed. It is recommended to seek help from a cryptography expert to fix this issue.
+
+## Exact commands to reproduce tests, coverage, and benchmarks
+
+- **Tests**: `npx hardhat test`
+- **Coverage**: `npx hardhat coverage`
+- **Benchmarks**: `npx hardhat run scripts/benchmark.ts --network hardhat`

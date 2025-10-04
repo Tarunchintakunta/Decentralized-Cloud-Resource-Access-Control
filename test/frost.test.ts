@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import BN from "bn.js";
 import * as frost from "../src/frost";
+import { ethers } from "ethers";
 
 describe("FROST Protocol", function () {
     it("Should complete a DKG and signing ceremony", async function () {

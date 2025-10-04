@@ -1,7 +1,7 @@
 import { ec } from "elliptic";
 import { sha256 } from "hash.js";
 import BN from "bn.js";
-import ethers = require("ethers");
+import { ethers } from "ethers";
 
 const ecInstance = new ec("secp256k1");
 const Ciphersuite = {
@@ -62,17 +62,17 @@ function challenge(P: Point, R: Point, message?: Uint8Array): BN {
     const R_y = R.getPublic().getY();
 
     let hash_input = [
-        { type: 'uint256', value: R_x.toString() },
-        { type: 'uint256', value: R_y.toString() },
-        { type: 'uint256', value: P_x.toString() },
-        { type: 'uint256', value: P_y.toString() },
+        { type: 'uint256', value: '0x' + R_x.toString(16) },
+        { type: 'uint256', value: '0x' + R_y.toString(16) },
+        { type: 'uint256', value: '0x' + P_x.toString(16) },
+        { type: 'uint256', value: '0x' + P_y.toString(16) },
     ];
 
     if (message) {
         hash_input.push({ type: 'bytes', value: message });
     }
 
-    const msg = ethers.utils.solidityKeccak256(
+    const msg = ethers.solidityPackedKeccak256(
         hash_input.map(i => i.type),
         hash_input.map(i => i.value)
     );
@@ -96,18 +96,16 @@ export function aggregatePublicKeys(publicKeys: Point[]): Point {
 }
 
 function getBinding(participantId: BN, message: Uint8Array, commitments: [Point, Point][]): BN {
-    const id_bytes = Buffer.from(participantId.toArray());
-    const msg_bytes = Buffer.from(message);
-    const commitments_bytes = Buffer.concat(
-        commitments.map(([D, E]) =>
-            Buffer.concat([
-                Buffer.from(D.getPublic('array', true)),
-                Buffer.from(E.getPublic('array', true)),
-            ])
-        )
-    );
-    const hash = sha256().update(id_bytes).update(msg_bytes).update(commitments_bytes).digest('hex');
-    return new BN(hash, 16).umod(new BN(Ciphersuite.q));
+    const types = ['uint256', 'bytes'];
+    const values: (string | Uint8Array)[] = [participantId.toString(), message];
+
+    for (const [D, E] of commitments) {
+        types.push('bytes32', 'bytes32');
+        values.push('0x' + D.getPublic().getX().toString(16), '0x' + E.getPublic().getX().toString(16));
+    }
+
+    const hash = ethers.solidityPackedKeccak256(types, values);
+    return new BN(hash.slice(2), 16).umod(new BN(Ciphersuite.q));
 }
 
 export function signRound1(participant: Participant): [Point, Point] {
@@ -145,6 +143,11 @@ export function aggregateSignatures(signatureShares: BN[], commitments: [Point, 
     const c = challenge(groupPublicKey, R, message);
     const Gz = ecInstance.g.mul(z);
     const RcPk = R.getPublic().add(groupPublicKey.getPublic().mul(c));
+    console.log("z", z.toString(16));
+    console.log("R", R.getPublic().getX().toString(16), R.getPublic().getY().toString(16));
+    console.log("c", c.toString(16));
+    console.log("Gz", Gz.getX().toString(16), Gz.getY().toString(16));
+    console.log("RcPk", RcPk.getX().toString(16), RcPk.getY().toString(16));
     if (!Gz.eq(RcPk)) {
         throw new Error('Aggregated signature is invalid');
     }

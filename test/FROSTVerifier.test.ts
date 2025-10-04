@@ -16,7 +16,7 @@ describe("FROSTVerifier", function () {
     it("Should verify a valid FROST signature", async function () {
         const n = 3;
         const t = 2;
-        const message = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("hello world"));
+        const message = ethers.keccak256(ethers.toUtf8Bytes("hello world"));
 
         // DKG
         const participants = Array.from({ length: n }, (_, i) => frost.createParticipant(new BN(i + 1), t));
@@ -35,14 +35,14 @@ describe("FROSTVerifier", function () {
         const commitments = signingParticipants.map((p) => frost.signRound1(p));
 
         const signatureShares = signingParticipants.map((p) => {
-            return frost.signRound2(p, ethers.utils.arrayify(message), commitments, groupPublicKey)
+            return frost.signRound2(p, ethers.getBytes(message), commitments, groupPublicKey)
         });
 
         const { R, z } = frost.aggregateSignatures(
             signatureShares,
             commitments,
             groupPublicKey,
-            ethers.utils.arrayify(message)
+            ethers.getBytes(message)
         );
 
         const isValid = await frostVerifier.verify(

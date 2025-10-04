@@ -1,6 +1,7 @@
 import { ec } from "elliptic";
+import { sha256 } from "hash.js";
 import BN from "bn.js";
-import keccak256 from "keccak256";
+import ethers = require("ethers");
 
 const ecInstance = new ec("secp256k1");
 const Ciphersuite = {
@@ -55,20 +56,28 @@ function schnorrProve(secret: BN): [Point, BN] {
 }
 
 function challenge(P: Point, R: Point, message?: Uint8Array): BN {
-    const R_x = R.getPublic().getX().toBuffer('be', 32);
-    const R_y = R.getPublic().getY().toBuffer('be', 32);
-    const P_x = P.getPublic().getX().toBuffer('be', 32);
-    const P_y = P.getPublic().getY().toBuffer('be', 32);
+    const P_x = P.getPublic().getX();
+    const P_y = P.getPublic().getY();
+    const R_x = R.getPublic().getX();
+    const R_y = R.getPublic().getY();
 
-    let hash_input = [R_x, R_y, P_x, P_y];
+    let hash_input = [
+        { type: 'uint256', value: R_x.toString() },
+        { type: 'uint256', value: R_y.toString() },
+        { type: 'uint256', value: P_x.toString() },
+        { type: 'uint256', value: P_y.toString() },
+    ];
 
     if (message) {
-        hash_input.push(Buffer.from(message));
+        hash_input.push({ type: 'bytes', value: message });
     }
 
-    const msg = keccak256(Buffer.concat(hash_input));
+    const msg = ethers.utils.solidityKeccak256(
+        hash_input.map(i => i.type),
+        hash_input.map(i => i.value)
+    );
 
-    return new BN(msg).umod(new BN(Ciphersuite.q));
+    return new BN(msg.slice(2), 16).umod(new BN(Ciphersuite.q));
 }
 
 export function calculateSecretShare(coefficients: BN[], id: BN): BN {
@@ -87,20 +96,18 @@ export function aggregatePublicKeys(publicKeys: Point[]): Point {
 }
 
 function getBinding(participantId: BN, message: Uint8Array, commitments: [Point, Point][]): BN {
-    const id_bytes = participantId.toBuffer('be', 32);
+    const id_bytes = Buffer.from(participantId.toArray());
     const msg_bytes = Buffer.from(message);
     const commitments_bytes = Buffer.concat(
         commitments.map(([D, E]) =>
             Buffer.concat([
-                D.getPublic().getX().toBuffer('be', 32),
-                D.getPublic().getY().toBuffer('be', 32),
-                E.getPublic().getX().toBuffer('be', 32),
-                E.getPublic().getY().toBuffer('be', 32),
+                Buffer.from(D.getPublic('array', true)),
+                Buffer.from(E.getPublic('array', true)),
             ])
         )
     );
-    const hash = keccak256(Buffer.concat([id_bytes, msg_bytes, commitments_bytes]));
-    return new BN(hash).umod(new BN(Ciphersuite.q));
+    const hash = sha256().update(id_bytes).update(msg_bytes).update(commitments_bytes).digest('hex');
+    return new BN(hash, 16).umod(new BN(Ciphersuite.q));
 }
 
 export function signRound1(participant: Participant): [Point, Point] {

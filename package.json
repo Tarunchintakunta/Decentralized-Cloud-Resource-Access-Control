@@ -1,51 +1,25 @@
 {
-  "name": "raviteja---thesis",
+  "name": "frost-threshold-access-control-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "API Gateway for FROST Threshold Access Control",
+  "main": "src/api/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Tarunchintakunta/Decentralized-Cloud-Resource-Access-Control.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Tarunchintakunta/Decentralized-Cloud-Resource-Access-Control/issues"
-  },
-  "homepage": "https://github.com/Tarunchintakunta/Decentralized-Cloud-Resource-Access-Control#readme",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
-    "@nomicfoundation/hardhat-ethers": "^3.1.0",
-    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
-    "@nomicfoundation/hardhat-verify": "^2.1.1",
-    "@typechain/ethers-v6": "^0.5.1",
-    "@typechain/hardhat": "^9.1.0",
-    "@types/chai": "^4.3.20",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^24.6.2",
-    "chai": "^4.5.0",
-    "ethers": "^6.15.0",
-    "hardhat": "^2.26.3",
-    "hardhat-gas-reporter": "^2.3.0",
-    "solidity-coverage": "^0.8.16",
-    "ts-node": "^10.9.2",
-    "typechain": "^8.3.2",
-    "typescript": "^5.9.3"
+    "start": "node src/api/server.js",
+    "dev": "nodemon src/api/server.js",
+    "test": "mocha tests/**/*.test.js"
   },
   "dependencies": {
-    "@noble/curves": "^2.0.1",
-    "@openzeppelin/contracts": "^5.4.0",
-    "@openzeppelin/contracts-upgradeable": "^5.4.0",
-    "@openzeppelin/hardhat-upgrades": "^3.9.1",
+    "@azure/arm-resources": "^5.2.0",
+    "@azure/identity": "^3.2.0",
+    "aws-sdk": "^2.1414.0",
+    "bn.js": "^5.2.1",
+    "elliptic": "^6.5.4",
     "ethers": "^5.7.2",
-    "keccak256": "^1.0.6"
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.22"
   }
 }

@@ -26,6 +26,8 @@
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^6.2.0",
-    "mocha": "^11.7.4"
+    "ganache-cli": "^6.12.2",
+    "mocha": "^11.7.4",
+    "truffle": "^5.11.5"
   }
 }

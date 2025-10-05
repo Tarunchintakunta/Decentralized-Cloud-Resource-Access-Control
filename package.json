@@ -1,25 +1,36 @@
 {
-  "name": "frost-threshold-access-control-api",
+  "name": "frost-threshold-access-control",
   "version": "1.0.0",
-  "description": "API Gateway for FROST Threshold Access Control",
-  "main": "src/api/server.js",
+  "description": "Decentralized Cloud Resource Access Control using Multi-Signature Smart Contracts with Threshold Cryptography",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/api/server.js",
-    "dev": "nodemon src/api/server.js",
-    "test": "mocha tests/**/*.test.js"
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "ganache": "ganache-cli -d",
+    "develop": "truffle develop"
   },
+  "keywords": [
+    "blockchain",
+    "threshold-cryptography",
+    "frost",
+    "smart-contracts"
+  ],
+  "author": "Ravi Teja Gandu",
+  "license": "MIT",
   "dependencies": {
-    "@azure/arm-resources": "^5.2.0",
-    "@azure/identity": "^3.2.0",
-    "aws-sdk": "^2.1414.0",
+    "@openzeppelin/contracts": "^4.9.3",
     "bn.js": "^5.2.1",
     "elliptic": "^6.5.4",
     "ethers": "^5.7.2",
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "@openzeppelin/test-helpers": "^0.5.16",
     "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "ganache-cli": "^6.12.2",
     "mocha": "^10.2.0",
-    "nodemon": "^2.0.22"
+    "truffle": "^5.11.5"
   }
 }

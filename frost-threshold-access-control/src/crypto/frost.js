@@ -1,6 +1,8 @@
+// src/crypto/frost.js
 const BN = require('bn.js');
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1'); // Using the same curve as Ethereum
+const { keccak256 } = require('ethers');
 
 class FROST {
   constructor(t, n) {
@@ -119,7 +121,8 @@ class FROST {
     
     return {
       r: R.getX().toString(16),
-      s: combinedSignature.toString(16)
+      s: combinedSignature.toString(16),
+      recoveryParam: R.getY().isOdd() ? 1 : 0
     };
   }
 
@@ -128,12 +131,13 @@ class FROST {
     const messageHash = new BN(this._hashMessage(message), 16);
     const r = new BN(signature.r, 16);
     const s = new BN(signature.s, 16);
+    const recoveryParam = signature.recoveryParam;
     
     // Signature verification: g^s = R * Y^h
     const left = ec.g.mul(s);
     
     // Reconstruct R point
-    const rPoint = ec.curve.point(r, this._computeYCoordinate(r));
+    const rPoint = ec.curve.pointFromX(r, recoveryParam);
     const right = rPoint.add(this.groupPublicKey.mul(messageHash));
     
     return left.eq(right);
@@ -141,14 +145,8 @@ class FROST {
 
   // Helper methods
   _hashMessage(message) {
-    // Simplified hash function for demo - use a proper cryptographic hash in production
-    // For example, keccak256 in Ethereum context
-    let hash = 0;
-    for (let i = 0; i < message.length; i++) {
-      hash = ((hash << 5) - hash) + message.charCodeAt(i);
-      hash |= 0;
-    }
-    return hash.toString(16).padStart(64, '0');
+    // Using keccak256 for hashing, similar to Ethereum
+    return keccak256(Buffer.from(message)).slice(2); // remove 0x prefix
   }
 
   _lagrangeCoefficient(i, indices) {
@@ -166,15 +164,6 @@ class FROST {
     }
     
     return num.mul(den.invm(ec.n)).mod(ec.n);
-  }
-
-  _computeYCoordinate(x) {
-    // Simplified method to compute y coordinate from x on the curve
-    // In a real implementation, you would use proper EC point decompression
-    const xBN = new BN(x, 16);
-    const x3 = xBN.pow(new BN(3));
-    const y2 = x3.add(new BN(7)).mod(ec.n); // y² = x³ + 7 for secp256k1
-    return ec.curve.sqrt(y2);
   }
 }
 

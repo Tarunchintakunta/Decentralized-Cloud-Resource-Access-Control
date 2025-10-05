@@ -1,0 +1,1262 @@
+{
+  "contractName": "Hashes",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"details\":\"Library of standard hash functions. _Available since v5.1._\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@openzeppelin/contracts/utils/cryptography/Hashes.sol\":\"Hashes\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/cryptography/Hashes.sol\":{\"keccak256\":\"0x8cbd338f083224b4b6f0ff42cbda641a0a6c31ffcdca197452b97fe4d0918269\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f517dec5ba0c6491395acbf7f1d621f4e89e8f218bf5303c867b1c5ad70c6b11\",\"dweb:/ipfs/QmWmXHRLEw8W6ckth7NyYTU88YfvuS7xSsfae5ksL8qNUe\"]}},\"version\":1}",
+  "bytecode": "0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea26469706673582212208b064c8419d24185c80a42570e9d69d0499deb505dd7cd09207bf7505ef46c4064736f6c63430008140033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040525f80fdfea26469706673582212208b064c8419d24185c80a42570e9d69d0499deb505dd7cd09207bf7505ef46c4064736f6c63430008140033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "221:811:9:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;221:811:9;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "221:811:9:-:0;;;;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v5.3.0) (utils/cryptography/Hashes.sol)\n\npragma solidity ^0.8.20;\n\n/**\n * @dev Library of standard hash functions.\n *\n * _Available since v5.1._\n */\nlibrary Hashes {\n    /**\n     * @dev Commutative Keccak256 hash of a sorted pair of bytes32. Frequently used when working with merkle proofs.\n     *\n     * NOTE: Equivalent to the `standardNodeHash` in our https://github.com/OpenZeppelin/merkle-tree[JavaScript library].\n     */\n    function commutativeKeccak256(bytes32 a, bytes32 b) internal pure returns (bytes32) {\n        return a < b ? efficientKeccak256(a, b) : efficientKeccak256(b, a);\n    }\n\n    /**\n     * @dev Implementation of keccak256(abi.encode(a, b)) that doesn't allocate or expand memory.\n     */\n    function efficientKeccak256(bytes32 a, bytes32 b) internal pure returns (bytes32 value) {\n        assembly (\"memory-safe\") {\n            mstore(0x00, a)\n            mstore(0x20, b)\n            value := keccak256(0x00, 0x40)\n        }\n    }\n}\n",
+  "sourcePath": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
+  "ast": {
+    "absolutePath": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
+    "exportedSymbols": {
+      "Hashes": [
+        1624
+      ]
+    },
+    "id": 1625,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1586,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "113:24:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Hashes",
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": {
+          "id": 1587,
+          "nodeType": "StructuredDocumentation",
+          "src": "139:81:9",
+          "text": " @dev Library of standard hash functions.\n _Available since v5.1._"
+        },
+        "fullyImplemented": true,
+        "id": 1624,
+        "linearizedBaseContracts": [
+          1624
+        ],
+        "name": "Hashes",
+        "nameLocation": "229:6:9",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1610,
+              "nodeType": "Block",
+              "src": "588:83:9",
+              "statements": [
+                {
+                  "expression": {
+                    "condition": {
+                      "commonType": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "id": 1599,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "id": 1597,
+                        "name": "a",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1590,
+                        "src": "605:1:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "id": 1598,
+                        "name": "b",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1592,
+                        "src": "609:1:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "src": "605:5:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseExpression": {
+                      "arguments": [
+                        {
+                          "id": 1605,
+                          "name": "b",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1592,
+                          "src": "659:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "id": 1606,
+                          "name": "a",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1590,
+                          "src": "662:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 1604,
+                        "name": "efficientKeccak256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1623,
+                        "src": "640:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 1607,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "640:24:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "id": 1608,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "Conditional",
+                    "src": "605:59:9",
+                    "trueExpression": {
+                      "arguments": [
+                        {
+                          "id": 1601,
+                          "name": "a",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1590,
+                          "src": "632:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "id": 1602,
+                          "name": "b",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1592,
+                          "src": "635:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 1600,
+                        "name": "efficientKeccak256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1623,
+                        "src": "613:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 1603,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "613:24:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 1596,
+                  "id": 1609,
+                  "nodeType": "Return",
+                  "src": "598:66:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1588,
+              "nodeType": "StructuredDocumentation",
+              "src": "242:257:9",
+              "text": " @dev Commutative Keccak256 hash of a sorted pair of bytes32. Frequently used when working with merkle proofs.\n NOTE: Equivalent to the `standardNodeHash` in our https://github.com/OpenZeppelin/merkle-tree[JavaScript library]."
+            },
+            "id": 1611,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "commutativeKeccak256",
+            "nameLocation": "513:20:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1593,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1590,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "542:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "534:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1589,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "534:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1592,
+                  "mutability": "mutable",
+                  "name": "b",
+                  "nameLocation": "553:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "545:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1591,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "545:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "533:22:9"
+            },
+            "returnParameters": {
+              "id": 1596,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1595,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "579:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1594,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "579:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "578:9:9"
+            },
+            "scope": 1624,
+            "src": "504:167:9",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1622,
+              "nodeType": "Block",
+              "src": "879:151:9",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "914:110:9",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "935:4:9",
+                              "type": "",
+                              "value": "0x00"
+                            },
+                            {
+                              "name": "a",
+                              "nodeType": "YulIdentifier",
+                              "src": "941:1:9"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "mstore",
+                            "nodeType": "YulIdentifier",
+                            "src": "928:6:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "928:15:9"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "928:15:9"
+                      },
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "963:4:9",
+                              "type": "",
+                              "value": "0x20"
+                            },
+                            {
+                              "name": "b",
+                              "nodeType": "YulIdentifier",
+                              "src": "969:1:9"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "mstore",
+                            "nodeType": "YulIdentifier",
+                            "src": "956:6:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "956:15:9"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "956:15:9"
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "984:30:9",
+                        "value": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1003:4:9",
+                              "type": "",
+                              "value": "0x00"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1009:4:9",
+                              "type": "",
+                              "value": "0x40"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "keccak256",
+                            "nodeType": "YulIdentifier",
+                            "src": "993:9:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "993:21:9"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "984:5:9"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "shanghai",
+                  "externalReferences": [
+                    {
+                      "declaration": 1614,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "941:1:9",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 1616,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "969:1:9",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 1619,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "984:5:9",
+                      "valueSize": 1
+                    }
+                  ],
+                  "flags": [
+                    "memory-safe"
+                  ],
+                  "id": 1621,
+                  "nodeType": "InlineAssembly",
+                  "src": "889:135:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1612,
+              "nodeType": "StructuredDocumentation",
+              "src": "677:109:9",
+              "text": " @dev Implementation of keccak256(abi.encode(a, b)) that doesn't allocate or expand memory."
+            },
+            "id": 1623,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "efficientKeccak256",
+            "nameLocation": "800:18:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1617,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1614,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "827:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "819:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1613,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "819:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1616,
+                  "mutability": "mutable",
+                  "name": "b",
+                  "nameLocation": "838:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "830:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1615,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "830:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "818:22:9"
+            },
+            "returnParameters": {
+              "id": 1620,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1619,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "872:5:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "864:13:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1618,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "864:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "863:15:9"
+            },
+            "scope": 1624,
+            "src": "791:239:9",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1625,
+        "src": "221:811:9",
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "src": "113:920:9"
+  },
+  "legacyAST": {
+    "absolutePath": "@openzeppelin/contracts/utils/cryptography/Hashes.sol",
+    "exportedSymbols": {
+      "Hashes": [
+        1624
+      ]
+    },
+    "id": 1625,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1586,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".20"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "113:24:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Hashes",
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": {
+          "id": 1587,
+          "nodeType": "StructuredDocumentation",
+          "src": "139:81:9",
+          "text": " @dev Library of standard hash functions.\n _Available since v5.1._"
+        },
+        "fullyImplemented": true,
+        "id": 1624,
+        "linearizedBaseContracts": [
+          1624
+        ],
+        "name": "Hashes",
+        "nameLocation": "229:6:9",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1610,
+              "nodeType": "Block",
+              "src": "588:83:9",
+              "statements": [
+                {
+                  "expression": {
+                    "condition": {
+                      "commonType": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      },
+                      "id": 1599,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "id": 1597,
+                        "name": "a",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1590,
+                        "src": "605:1:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "<",
+                      "rightExpression": {
+                        "id": 1598,
+                        "name": "b",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1592,
+                        "src": "609:1:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      "src": "605:5:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseExpression": {
+                      "arguments": [
+                        {
+                          "id": 1605,
+                          "name": "b",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1592,
+                          "src": "659:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "id": 1606,
+                          "name": "a",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1590,
+                          "src": "662:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 1604,
+                        "name": "efficientKeccak256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1623,
+                        "src": "640:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 1607,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "640:24:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "id": 1608,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "Conditional",
+                    "src": "605:59:9",
+                    "trueExpression": {
+                      "arguments": [
+                        {
+                          "id": 1601,
+                          "name": "a",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1590,
+                          "src": "632:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        {
+                          "id": 1602,
+                          "name": "b",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1592,
+                          "src": "635:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          },
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 1600,
+                        "name": "efficientKeccak256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1623,
+                        "src": "613:18:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_pure$_t_bytes32_$_t_bytes32_$returns$_t_bytes32_$",
+                          "typeString": "function (bytes32,bytes32) pure returns (bytes32)"
+                        }
+                      },
+                      "id": 1603,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "613:24:9",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes32",
+                        "typeString": "bytes32"
+                      }
+                    },
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "functionReturnParameters": 1596,
+                  "id": 1609,
+                  "nodeType": "Return",
+                  "src": "598:66:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1588,
+              "nodeType": "StructuredDocumentation",
+              "src": "242:257:9",
+              "text": " @dev Commutative Keccak256 hash of a sorted pair of bytes32. Frequently used when working with merkle proofs.\n NOTE: Equivalent to the `standardNodeHash` in our https://github.com/OpenZeppelin/merkle-tree[JavaScript library]."
+            },
+            "id": 1611,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "commutativeKeccak256",
+            "nameLocation": "513:20:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1593,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1590,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "542:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "534:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1589,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "534:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1592,
+                  "mutability": "mutable",
+                  "name": "b",
+                  "nameLocation": "553:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "545:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1591,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "545:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "533:22:9"
+            },
+            "returnParameters": {
+              "id": 1596,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1595,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1611,
+                  "src": "579:7:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1594,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "579:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "578:9:9"
+            },
+            "scope": 1624,
+            "src": "504:167:9",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1622,
+              "nodeType": "Block",
+              "src": "879:151:9",
+              "statements": [
+                {
+                  "AST": {
+                    "nodeType": "YulBlock",
+                    "src": "914:110:9",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "935:4:9",
+                              "type": "",
+                              "value": "0x00"
+                            },
+                            {
+                              "name": "a",
+                              "nodeType": "YulIdentifier",
+                              "src": "941:1:9"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "mstore",
+                            "nodeType": "YulIdentifier",
+                            "src": "928:6:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "928:15:9"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "928:15:9"
+                      },
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "963:4:9",
+                              "type": "",
+                              "value": "0x20"
+                            },
+                            {
+                              "name": "b",
+                              "nodeType": "YulIdentifier",
+                              "src": "969:1:9"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "mstore",
+                            "nodeType": "YulIdentifier",
+                            "src": "956:6:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "956:15:9"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "956:15:9"
+                      },
+                      {
+                        "nodeType": "YulAssignment",
+                        "src": "984:30:9",
+                        "value": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1003:4:9",
+                              "type": "",
+                              "value": "0x00"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "1009:4:9",
+                              "type": "",
+                              "value": "0x40"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "keccak256",
+                            "nodeType": "YulIdentifier",
+                            "src": "993:9:9"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "993:21:9"
+                        },
+                        "variableNames": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "984:5:9"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "evmVersion": "shanghai",
+                  "externalReferences": [
+                    {
+                      "declaration": 1614,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "941:1:9",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 1616,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "969:1:9",
+                      "valueSize": 1
+                    },
+                    {
+                      "declaration": 1619,
+                      "isOffset": false,
+                      "isSlot": false,
+                      "src": "984:5:9",
+                      "valueSize": 1
+                    }
+                  ],
+                  "flags": [
+                    "memory-safe"
+                  ],
+                  "id": 1621,
+                  "nodeType": "InlineAssembly",
+                  "src": "889:135:9"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1612,
+              "nodeType": "StructuredDocumentation",
+              "src": "677:109:9",
+              "text": " @dev Implementation of keccak256(abi.encode(a, b)) that doesn't allocate or expand memory."
+            },
+            "id": 1623,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "efficientKeccak256",
+            "nameLocation": "800:18:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1617,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1614,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nameLocation": "827:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "819:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1613,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "819:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1616,
+                  "mutability": "mutable",
+                  "name": "b",
+                  "nameLocation": "838:1:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "830:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1615,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "830:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "818:22:9"
+            },
+            "returnParameters": {
+              "id": 1620,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1619,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "872:5:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1623,
+                  "src": "864:13:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1618,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "864:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "863:15:9"
+            },
+            "scope": 1624,
+            "src": "791:239:9",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1625,
+        "src": "221:811:9",
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "src": "113:920:9"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.20+commit.a1b79de6.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2025-10-05T07:02:23.527Z",
+  "devdoc": {
+    "details": "Library of standard hash functions. _Available since v5.1._",
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
